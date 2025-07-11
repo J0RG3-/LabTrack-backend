@@ -69,7 +69,6 @@ def get_low_stock_compounds() -> list[CompoundOut]:
     return [CompoundOut(**item) for item in response.data]
 
 def get_expiring_compounds(days: int = 30) -> list[CompoundOut]:
-    # Calculamos la fecha de expiración en el futuro
     future_date = (datetime.datetime.now() + datetime.timedelta(days=days)).date()
 
     response = supabase.table("compounds").select("*").lte("expiry_date", future_date).execute()

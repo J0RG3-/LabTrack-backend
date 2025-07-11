@@ -62,7 +62,7 @@ def get_by_instance(instance_id: str):
 @router.post("/", response_model=TransactionOut)
 def add_transaction(transaction: TransactionCreate):
     try:
-        return register_transaction(transaction)      # ← usa la función correcta
+        return register_transaction(transaction)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
 

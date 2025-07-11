@@ -12,7 +12,6 @@ SUPABASE_URL = getenv("SUPABASE_URL")
 SUPABASE_KEY = getenv("SUPABASE_SERVICE_KEY")
 supabase = create_client(SUPABASE_URL, SUPABASE_KEY)
 
-# --- utilidades ----------------------------------------------------------- #
 CAMEL_TO_SNAKE = {
     "compoundId": "compound_id",
     "instanceId": "instance_id",
@@ -25,8 +24,6 @@ def col(name: str) -> str:
     """Convierte el nombre camelCase recibido desde el front a snake_case."""
     return CAMEL_TO_SNAKE.get(name, name)
 
-
-# --- CRUD ----------------------------------------------------------------- #
 def register_transaction(tx: TransactionCreate) -> TransactionOut:
     data = tx.model_dump()
     data.setdefault("timestamp", datetime.utcnow().isoformat())
@@ -44,7 +41,6 @@ def list_transactions(filters: Optional[Dict] = None) -> List[TransactionOut]:
 
     query = supabase.table("transactions").select("*")
 
-    # Filtros dinámicos
     if "compoundId" in filters:
         query = query.eq(col("compoundId"), filters["compoundId"])
     if "instanceId" in filters:
@@ -56,12 +52,10 @@ def list_transactions(filters: Optional[Dict] = None) -> List[TransactionOut]:
     if "endDate" in filters:
         query = query.lte(col("endDate"), filters["endDate"])
 
-    # Orden
     sort_field = col(filters.get("_sort", "timestamp"))
     desc_order = filters.get("_order", "desc").lower() == "desc"
     query = query.order(sort_field, desc=desc_order)
 
-    # Paginación
     if "_limit" in filters:
         limit = int(filters["_limit"])
         query = query.limit(limit)
@@ -111,7 +105,6 @@ def delete_transaction(tx_id: str) -> Dict[str, bool]:
         raise Exception(f"No se pudo eliminar la transacción {tx_id}: {e}")
 
 
-# --- estadísticas --------------------------------------------------------- #
 def get_transaction_statistics(filters: Optional[Dict] = None) -> Dict:
     txns = list_transactions(filters)
 

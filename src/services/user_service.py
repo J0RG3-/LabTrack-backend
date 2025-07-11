@@ -50,8 +50,6 @@ def authenticate_user(username: str, password: str):
 
 def get_user_by_id(user_id: str) -> UserOut:
     response = supabase.table("users").select("*").eq("id", user_id).single().execute()
-
-    # Si el objeto tiene atributo 'error' y es distinto de None (y no False)
     if hasattr(response, "error") and response.error:
         raise Exception(f"Error en la consulta: {response.error}")
 

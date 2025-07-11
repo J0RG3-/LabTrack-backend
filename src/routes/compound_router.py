@@ -35,11 +35,10 @@ def get_compound_route(id: str):
 
 @router.put("/{id}", response_model=CompoundOut)
 def update_compound_route(id: str, compound: CompoundUpdate):
-    print(">>>>> Entró al endpoint PUT /compounds")
     try:
         return update_compound(id, compound)
     except Exception as e:
-        print(">>>>> Error en update:", e)
+        print("Error:", e)
         raise HTTPException(status_code=400, detail=f"Error updating compound: {str(e)}")
 
 

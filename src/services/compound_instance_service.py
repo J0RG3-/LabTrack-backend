@@ -22,9 +22,7 @@ def create_instance(instance: CompoundInstanceCreate) -> CompoundInstanceOut:
 def list_instances(params: dict = {}) -> list[CompoundInstanceOut]:
     response = supabase.table("compound_instances").select("*").execute()
 
-    # Filtrado adicional según los parámetros recibidos, si es necesario
     if params:
-        # Este es un ejemplo de filtrado. Si necesitas más parámetros, ajusta el código.
         response.data = [item for item in response.data if all(item[key] == value for key, value in params.items())]
 
     return [CompoundInstanceOut(**item) for item in response.data]
@@ -57,7 +55,6 @@ def delete_instance(instance_id: str) -> CompoundInstanceOut:
     return CompoundInstanceOut(**response.data[0])
 
 def get_low_stock_instances() -> list[CompoundInstanceOut]:
-    # Este método filtra las instancias con bajo stock basándose en el campo `quantity`.
     response = supabase.table("compound_instances").select("*").execute()
     low_stock_instances = [item for item in response.data if item.get("quantity", 0) <= item.get("threshold", 0)]
     return [CompoundInstanceOut(**item) for item in low_stock_instances]
